@@ -11,6 +11,7 @@ namespace gutenberg_analysis
     class Program
     {
         Dictionary<string, int> Frequencies = new Dictionary<string, int>();
+        ulong TotalWordCount = 0;
         string Root = "./data/";
 
         static void Main(string[] args)
@@ -33,7 +34,8 @@ namespace gutenberg_analysis
             {
                 var words = line
                     .Trim(new[] {'\n', '\r'})
-                    .Split(new[] {' ', '.', ',', '!', '?', '"', '\''}, StringSplitOptions.RemoveEmptyEntries);
+                    .Split(new[] {' ', '.', ',', '!', '?', '"', '\'', '{', '}', ']', '[', '(', ')', '<', '>', ';', ':'},
+                           StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (var word in words.Select(word => word.ToLower()))
                 {
@@ -76,12 +78,16 @@ namespace gutenberg_analysis
                     {
                         Frequencies[word] = wordFrequency.Value;
                     }
+
+                    TotalWordCount += (ulong)wordFrequency.Value;
                 }
             }
         }
 
         public void PrintFrequenciesSorted()
         {
+            Console.WriteLine("Total word count: " + TotalWordCount);
+            Console.WriteLine("Unique word count: " + Frequencies.Count);
             foreach (var freq in Frequencies.OrderByDescending(key => key.Value).Take(10))
             {
                 Console.WriteLine(freq.Key + ": " + freq.Value);
