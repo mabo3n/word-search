@@ -28,23 +28,7 @@ namespace gutenberg_analysis
             }
         }
 
-        public IEnumerable<string> GetWordsFromFile(string path)
-        {
-            foreach (string line in File.ReadLines(path))
-            {
-                var words = line
-                    .Trim(new[] {'\n', '\r'})
-                    .Split(new[] {' ', '.', ',', '!', '?', '"', '\'', '{', '}', ']', '[', '(', ')', '<', '>', ';', ':'},
-                           StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var word in words.Select(word => word.ToLower()))
-                {
-                    yield return word;
-                }
-            }
-        }
-
-        public Dictionary<string, int> BuildWordFrequency(IEnumerable<string> words)
+        public Dictionary<string, int> BuildWordFrequency(IAsyncEnumerable<string> words)
         {
             var frequencies = new Dictionary<string, int>();
 
@@ -99,8 +83,8 @@ namespace gutenberg_analysis
             var executionBlock = new ActionBlock<string>
             (
                 filePath => {
-                    var fileWords = GetWordsFromFile(filePath);
-                    var fileWordFrequencies = BuildWordFrequency(fileWords);
+                    var words = new WordReader(filePath).EnumerateAsync();
+                    var fileWordFrequencies = BuildWordFrequency(words);
                     // Console.WriteLine("Done for " + filePath);
                     UpdateGlobalFrequenciesFromFileFrequencies(fileWordFrequencies);
                 },
