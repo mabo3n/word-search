@@ -6,6 +6,6 @@ namespace gutenberg_analysis
 {
     public interface IDataReader<T>
     {
-        public IAsyncEnumerable<T> EnumerateAsync();
+        public IEnumerable<T> Enumerate();
     }
 }

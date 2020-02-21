@@ -28,7 +28,7 @@ namespace gutenberg_analysis
             }
         }
 
-        public Dictionary<string, int> BuildWordFrequency(IAsyncEnumerable<string> words)
+        public Dictionary<string, int> BuildWordFrequency(IEnumerable<string> words)
         {
             var frequencies = new Dictionary<string, int>();
 
@@ -83,7 +83,7 @@ namespace gutenberg_analysis
             var executionBlock = new ActionBlock<string>
             (
                 filePath => {
-                    var words = new WordReader(filePath).EnumerateAsync();
+                    var words = new WordReader(filePath).Enumerate();
                     var fileWordFrequencies = BuildWordFrequency(words);
                     // Console.WriteLine("Done for " + filePath);
                     UpdateGlobalFrequenciesFromFileFrequencies(fileWordFrequencies);

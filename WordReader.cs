@@ -21,24 +21,16 @@ namespace gutenberg_analysis
             this.path = path;
         }
 
-        public async IAsyncEnumerable<string> EnumerateAsync()
-        {
-            foreach(var word in GetWordsFromFile(path))
-            {
-                yield return word;
-            }
-        }
-
-        public IEnumerable<string> GetWordsFromFile(string path)
+        public IEnumerable<string> Enumerate()
         {
             foreach (string line in File.ReadLines(path))
             {
                 var words = line
                     .Split(IgnoredCharacters, StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (var word in words.Select(word => word.ToLower()))
+                foreach (var word in words)
                 {
-                    yield return word;
+                    yield return word.ToLower();
                 }
             }
         }
