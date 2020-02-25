@@ -7,7 +7,6 @@ namespace gutenberg_analysis
 {
     public class WordOcurrencesReader : IDataReader<WordOcurrenceEntry>
     {
-
         private readonly string path;
 
         public WordOcurrencesReader(string path)
