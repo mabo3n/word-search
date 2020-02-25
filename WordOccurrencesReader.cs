@@ -5,28 +5,28 @@ using System.Linq;
 
 namespace gutenberg_analysis
 {
-    public class WordOcurrencesReader : IDataReader<WordOcurrenceEntry>
+    public class WordOccurrencesReader : IDataReader<WordOccurrenceEntry>
     {
         private readonly string path;
 
-        public WordOcurrencesReader(string path)
+        public WordOccurrencesReader(string path)
         {
             this.path = path;
         }
 
-        public IEnumerable<WordOcurrenceEntry> Enumerate()
+        public IEnumerable<WordOccurrenceEntry> Enumerate()
         {
             using var fileStream = File.OpenRead(path);
             using var binaryReader = new BinaryReader(fileStream);
 
-            while(fileStream.Position < fileStream.Length)
+            while (fileStream.Position < fileStream.Length)
             {
-                var entry = new WordOcurrenceEntry();
+                var entry = new WordOccurrenceEntry();
 
                 entry.Word = binaryReader.ReadString();
                 entry.FileName = binaryReader.ReadString();
                 entry.OffsetOnFile = binaryReader.ReadUInt64();
-                entry.NextOcurrenceOffset = binaryReader.ReadUInt64();
+                entry.NextOccurrenceOffset = binaryReader.ReadUInt64();
 
                 yield return entry;
             }

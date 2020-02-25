@@ -5,21 +5,21 @@ using System.Linq;
 
 namespace gutenberg_analysis
 {
-    public class WordOcurrencesIndexCreator : IDataWriter<KeyValuePair<string, long>>
+    public class WordOccurrencesIndexCreator : IDataWriter<KeyValuePair<string, long>>
     {
         private readonly string writePath;
 
-        public WordOcurrencesIndexCreator(string writePath)
+        public WordOccurrencesIndexCreator(string writePath)
         {
             this.writePath = writePath;
         }
 
-        public void Write(IEnumerable<KeyValuePair<string, long>> wordOcurrenceIndexes)
+        public void Write(IEnumerable<KeyValuePair<string, long>> wordOccurrenceIndexes)
         {
             using var fileStream = File.OpenWrite(writePath);
             using var binaryWriter = new BinaryWriter(fileStream);
 
-            foreach (var entry in wordOcurrenceIndexes)
+            foreach (var entry in wordOccurrenceIndexes)
             {
                 binaryWriter.Write(entry.Key);
                 binaryWriter.Write(entry.Value);

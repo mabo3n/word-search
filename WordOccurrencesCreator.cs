@@ -4,34 +4,34 @@ using System;
 
 namespace gutenberg_analysis
 {
-    public class WordOcurrencesCreator : IDataWriter<WordOcurrenceEntry>
+    public class WordOccurrencesCreator : IDataWriter<WordOccurrenceEntry>
     {
         private const long NullOffset = 0;
 
         private readonly string writePath;
-        private readonly Dictionary<string, long> lastOcurrencesNextPointerOffset;
+        private readonly Dictionary<string, long> lastOccurrencesNextPointerOffset;
 
-        public WordOcurrencesCreator(string writePath)
+        public WordOccurrencesCreator(string writePath)
         {
             this.writePath = writePath;
-            lastOcurrencesNextPointerOffset = new Dictionary<string, long>();
+            lastOccurrencesNextPointerOffset = new Dictionary<string, long>();
         }
 
-        private bool PreviousEntryExists(WordOcurrenceEntry entry)
-            => lastOcurrencesNextPointerOffset.ContainsKey(entry.Word);
+        private bool PreviousEntryExists(WordOccurrenceEntry entry)
+            => lastOccurrencesNextPointerOffset.ContainsKey(entry.Word);
 
-        public void Write(IEnumerable<WordOcurrenceEntry> wordOcurrenceEntries)
+        public void Write(IEnumerable<WordOccurrenceEntry> wordOccurrenceEntries)
         {
             using var fileStream = File.OpenWrite(writePath);
             using var binaryWriter = new BinaryWriter(fileStream);
 
-            foreach (var entry in wordOcurrenceEntries)
+            foreach (var entry in wordOccurrenceEntries)
             {
                 if (PreviousEntryExists(entry))
                 {
                     long currentEntryOffset = fileStream.Position;
                     long previousEntryNextPointerOffset =
-                        lastOcurrencesNextPointerOffset[entry.Word];
+                        lastOccurrencesNextPointerOffset[entry.Word];
 
                     fileStream.Seek(previousEntryNextPointerOffset, SeekOrigin.Begin);
                     binaryWriter.Write(currentEntryOffset);
@@ -41,7 +41,7 @@ namespace gutenberg_analysis
                 binaryWriter.Write(entry.FileName);
                 binaryWriter.Write(entry.OffsetOnFile);
 
-                lastOcurrencesNextPointerOffset[entry.Word] = fileStream.Position;
+                lastOccurrencesNextPointerOffset[entry.Word] = fileStream.Position;
                 binaryWriter.Write(NullOffset);
             }
         }
