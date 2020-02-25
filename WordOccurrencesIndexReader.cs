@@ -22,8 +22,8 @@ namespace gutenberg_analysis
             while (fileStream.Position < fileStream.Length)
             {
                 var word = binaryReader.ReadString();
-                var firstOccurrenceOffset = binaryReader.ReadUInt64();
-                yield return new KeyValuePair<string, long>(word, (long)firstOccurrenceOffset);
+                var firstOccurrenceOffset = binaryReader.ReadInt64();
+                yield return new KeyValuePair<string, long>(word, firstOccurrenceOffset);
             }
         }
     }

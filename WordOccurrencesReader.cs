@@ -25,8 +25,8 @@ namespace gutenberg_analysis
 
                 entry.Word = binaryReader.ReadString();
                 entry.FileName = binaryReader.ReadString();
-                entry.OffsetOnFile = binaryReader.ReadUInt64();
-                entry.NextOccurrenceOffset = binaryReader.ReadUInt64();
+                entry.OffsetOnFile = binaryReader.ReadInt64();
+                entry.NextOccurrenceOffset = binaryReader.ReadInt64();
 
                 yield return entry;
             }
