@@ -19,13 +19,10 @@ namespace GutenbergAnalysis
             binaryWriter = new BinaryWriter(fileStream);
         }
 
-        public void Write(IEnumerable<WordOccurrenceIndexRecord> wordOccurrenceIndexes)
+        public void Write(WordOccurrenceIndexRecord wordOccurrenceIndex)
         {
-            foreach (var entry in wordOccurrenceIndexes)
-            {
-                binaryWriter.Write(entry.Word);
-                binaryWriter.Write(entry.Position);
-            }
+            binaryWriter.Write(wordOccurrenceIndex.Word);
+            binaryWriter.Write(wordOccurrenceIndex.Position);
         }
 
         public void Dispose()

@@ -28,27 +28,24 @@ namespace GutenbergAnalysis
         private bool PreviousEntryExists(WordOccurrenceRecord entry)
             => lastOccurrencesNextPointerOffset.ContainsKey(entry.Word);
 
-        public void Write(IEnumerable<WordOccurrenceRecord> wordOccurrenceEntries)
+        public void Write(WordOccurrenceRecord wordOccurrenceRecord)
         {
-            foreach (var entry in wordOccurrenceEntries)
+            if (PreviousEntryExists(wordOccurrenceRecord))
             {
-                if (PreviousEntryExists(entry))
-                {
-                    long currentEntryOffset = fileStream.Position;
-                    long previousEntryNextPointerOffset =
-                        lastOccurrencesNextPointerOffset[entry.Word];
+                long currentEntryOffset = fileStream.Position;
+                long previousEntryNextPointerOffset =
+                    lastOccurrencesNextPointerOffset[wordOccurrenceRecord.Word];
 
-                    fileStream.Seek(previousEntryNextPointerOffset, SeekOrigin.Begin);
-                    binaryWriter.Write(currentEntryOffset);
-                    fileStream.Seek(currentEntryOffset, SeekOrigin.Begin);
-                }
-                binaryWriter.Write(entry.Word);
-                binaryWriter.Write(entry.FileName);
-                binaryWriter.Write(entry.OffsetOnFile);
-
-                lastOccurrencesNextPointerOffset[entry.Word] = fileStream.Position;
-                binaryWriter.Write(NullOffset);
+                fileStream.Seek(previousEntryNextPointerOffset, SeekOrigin.Begin);
+                binaryWriter.Write(currentEntryOffset);
+                fileStream.Seek(currentEntryOffset, SeekOrigin.Begin);
             }
+            binaryWriter.Write(wordOccurrenceRecord.Word);
+            binaryWriter.Write(wordOccurrenceRecord.FileName);
+            binaryWriter.Write(wordOccurrenceRecord.OffsetOnFile);
+
+            lastOccurrencesNextPointerOffset[wordOccurrenceRecord.Word] = fileStream.Position;
+            binaryWriter.Write(NullOffset);
         }
 
         public void Dispose()

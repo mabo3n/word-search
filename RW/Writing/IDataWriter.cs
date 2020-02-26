@@ -5,6 +5,6 @@ namespace GutenbergAnalysis.RW.Writing
 {
     public interface IDataWriter<T> where T : Record
     {
-        public void Write(IEnumerable<T> data);
+        public void Write(T data);
     }
 }
