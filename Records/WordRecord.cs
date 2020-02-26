@@ -1,8 +1,7 @@
 namespace GutenbergAnalysis.Records
 {
-    public class WordOffset
+    public class WordRecord : Record
     {
         public string Word { get; set; }
-        public long Offset { get; set; }
     }
 }

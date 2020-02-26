@@ -5,13 +5,13 @@ using GutenbergAnalysis.Records;
 
 namespace GutenbergAnalysis
 {
-    public class WordOffsetsWriter : IDataWriter<WordOffset>
+    public class WordOccurrenceIndexesWriter : IDataWriter<WordOccurrenceIndexRecord>
     {
         private readonly string writePath;
         private readonly FileStream fileStream;
         private readonly BinaryWriter binaryWriter;
 
-        public WordOffsetsWriter(string writePath)
+        public WordOccurrenceIndexesWriter(string writePath)
         {
             this.writePath = writePath;
 
@@ -19,12 +19,12 @@ namespace GutenbergAnalysis
             binaryWriter = new BinaryWriter(fileStream);
         }
 
-        public void Write(IEnumerable<WordOffset> wordOffsets)
+        public void Write(IEnumerable<WordOccurrenceIndexRecord> wordOccurrenceIndexes)
         {
-            foreach (var entry in wordOffsets)
+            foreach (var entry in wordOccurrenceIndexes)
             {
                 binaryWriter.Write(entry.Word);
-                binaryWriter.Write(entry.Offset);
+                binaryWriter.Write(entry.Position);
             }
         }
 

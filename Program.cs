@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Diagnostics;
 using GutenbergAnalysis.RW.Reading;
+using GutenbergAnalysis.Records;
 
 namespace GutenbergAnalysis
 {
@@ -115,19 +116,19 @@ namespace GutenbergAnalysis
             }
         }
 
-        public Dictionary<string, int> BuildWordFrequency(IEnumerable<string> words)
+        public Dictionary<string, int> BuildWordFrequency(IEnumerable<WordRecord> wordRecords)
         {
             var frequencies = new Dictionary<string, int>();
 
-            foreach (var word in words)
+            foreach (var record in wordRecords)
             {
-                if (frequencies.ContainsKey(word))
+                if (frequencies.ContainsKey(record.Word))
                 {
-                    frequencies[word] += 1;
+                    frequencies[record.Word] += 1;
                 }
                 else
                 {
-                    frequencies[word] = 1;
+                    frequencies[record.Word] = 1;
                 }
             }
 

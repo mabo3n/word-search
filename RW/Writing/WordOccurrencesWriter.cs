@@ -6,7 +6,7 @@ using System;
 
 namespace GutenbergAnalysis
 {
-    public class WordOccurrencesWriter : IDataWriter<WordOccurrence>, IDisposable
+    public class WordOccurrencesWriter : IDataWriter<WordOccurrenceRecord>, IDisposable
     {
         private const long NullOffset = 0;
         private readonly Dictionary<string, long> lastOccurrencesNextPointerOffset;
@@ -25,10 +25,10 @@ namespace GutenbergAnalysis
             lastOccurrencesNextPointerOffset = new Dictionary<string, long>();
         }
 
-        private bool PreviousEntryExists(WordOccurrence entry)
+        private bool PreviousEntryExists(WordOccurrenceRecord entry)
             => lastOccurrencesNextPointerOffset.ContainsKey(entry.Word);
 
-        public void Write(IEnumerable<WordOccurrence> wordOccurrenceEntries)
+        public void Write(IEnumerable<WordOccurrenceRecord> wordOccurrenceEntries)
         {
             foreach (var entry in wordOccurrenceEntries)
             {

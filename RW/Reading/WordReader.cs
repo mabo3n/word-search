@@ -1,10 +1,11 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using GutenbergAnalysis.Records;
 
 namespace GutenbergAnalysis.RW.Reading
 {
-    public class WordReader : IDataReader<string>
+    public class WordReader : IDataReader<WordRecord>
     {
         private static char[] IgnoredCharacters = new[]
         {
@@ -20,7 +21,7 @@ namespace GutenbergAnalysis.RW.Reading
             this.path = path;
         }
 
-        public IEnumerable<string> Enumerate()
+        public IEnumerable<WordRecord> Enumerate()
         {
             foreach (string line in File.ReadLines(path))
             {
@@ -29,7 +30,11 @@ namespace GutenbergAnalysis.RW.Reading
 
                 foreach (var word in words)
                 {
-                    yield return word.ToLower();
+                    yield return new WordRecord()
+                    {
+                        Word = word,
+                        Position = 0
+                    };
                 }
             }
         }

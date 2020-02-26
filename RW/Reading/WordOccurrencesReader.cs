@@ -4,7 +4,7 @@ using GutenbergAnalysis.Records;
 
 namespace GutenbergAnalysis.RW.Reading
 {
-    public class WordOccurrencesReader : IDataReader<WordOccurrence>
+    public class WordOccurrencesReader : IDataReader<WordOccurrenceRecord>
     {
         private readonly string path;
 
@@ -13,14 +13,14 @@ namespace GutenbergAnalysis.RW.Reading
             this.path = path;
         }
 
-        public IEnumerable<WordOccurrence> Enumerate()
+        public IEnumerable<WordOccurrenceRecord> Enumerate()
         {
             using var fileStream = File.OpenRead(path);
             using var binaryReader = new BinaryReader(fileStream);
 
             while (fileStream.Position < fileStream.Length)
             {
-                var entry = new WordOccurrence();
+                var entry = new WordOccurrenceRecord();
 
                 entry.Word = binaryReader.ReadString();
                 entry.FileName = binaryReader.ReadString();
