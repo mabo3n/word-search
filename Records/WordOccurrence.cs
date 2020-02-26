@@ -1,6 +1,6 @@
-namespace GutenbergAnalysis
+namespace GutenbergAnalysis.Records
 {
-    public class WordOccurrenceEntry
+    public class WordOccurrence
     {
         public string Word { get; set; }
         public string FileName { get; set; }

@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Diagnostics;
+using GutenbergAnalysis.RW.Reading;
 
-namespace gutenberg_analysis
+namespace GutenbergAnalysis
 {
     class Program
     {
@@ -78,16 +79,19 @@ namespace gutenberg_analysis
             }
         }
 
+        private void UpdateWordFrequenciesFromFile(string filePath)
+        {
+            var words = new WordReader(filePath).Enumerate();
+            var fileWordFrequencies = BuildWordFrequency(words);
+            // Console.WriteLine("Done for " + filePath);
+            UpdateGlobalFrequenciesFromFileFrequencies(fileWordFrequencies);
+        }
+
         public async Task WordFrequencyAsync()
         {
             var executionBlock = new ActionBlock<string>
             (
-                filePath => {
-                    var words = new WordReader(filePath).Enumerate();
-                    var fileWordFrequencies = BuildWordFrequency(words);
-                    // Console.WriteLine("Done for " + filePath);
-                    UpdateGlobalFrequenciesFromFileFrequencies(fileWordFrequencies);
-                },
+                UpdateWordFrequenciesFromFile,
                 new ExecutionDataflowBlockOptions {
                     MaxDegreeOfParallelism = 4,
                     BoundedCapacity = 4

@@ -1,9 +1,8 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace GutenbergAnalysis
+namespace GutenbergAnalysis.RW.Reading
 {
     public class WordReader : IDataReader<string>
     {

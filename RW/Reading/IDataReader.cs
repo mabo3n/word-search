@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
-namespace GutenbergAnalysis
+namespace GutenbergAnalysis.RW.Reading
 {
     public interface IDataReader<T>
     {

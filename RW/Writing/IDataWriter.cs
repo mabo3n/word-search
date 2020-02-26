@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GutenbergAnalysis
+namespace GutenbergAnalysis.RW.Writing
 {
     public interface IDataWriter<T>
     {

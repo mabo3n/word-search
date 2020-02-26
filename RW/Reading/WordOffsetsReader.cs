@@ -1,15 +1,13 @@
-using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace GutenbergAnalysis
+namespace GutenbergAnalysis.RW.Reading
 {
-    public class WordOccurrencesIndexReader : IDataReader<KeyValuePair<string, long>>
+    public class WordOffsetsReader : IDataReader<KeyValuePair<string, long>>
     {
         private readonly string path;
 
-        public WordOccurrencesIndexReader(string path)
+        public WordOffsetsReader(string path)
         {
             this.path = path;
         }
