@@ -2,19 +2,26 @@ using System.IO;
 using System.Collections.Generic;
 using GutenbergAnalysis.Records;
 using GutenbergAnalysis.RW.Writing;
+using System;
 
 namespace GutenbergAnalysis
 {
-    public class WordOccurrencesCreator : IDataWriter<WordOccurrence>
+    public class WordOccurrencesWriter : IDataWriter<WordOccurrence>, IDisposable
     {
         private const long NullOffset = 0;
-
-        private readonly string writePath;
         private readonly Dictionary<string, long> lastOccurrencesNextPointerOffset;
 
-        public WordOccurrencesCreator(string writePath)
+        private readonly string writePath;
+        private readonly FileStream fileStream;
+        private readonly BinaryWriter binaryWriter;
+
+        public WordOccurrencesWriter(string writePath)
         {
             this.writePath = writePath;
+
+            fileStream = File.OpenWrite(writePath);
+            binaryWriter = new BinaryWriter(fileStream);
+
             lastOccurrencesNextPointerOffset = new Dictionary<string, long>();
         }
 
@@ -23,9 +30,6 @@ namespace GutenbergAnalysis
 
         public void Write(IEnumerable<WordOccurrence> wordOccurrenceEntries)
         {
-            using var fileStream = File.OpenWrite(writePath);
-            using var binaryWriter = new BinaryWriter(fileStream);
-
             foreach (var entry in wordOccurrenceEntries)
             {
                 if (PreviousEntryExists(entry))
@@ -45,6 +49,12 @@ namespace GutenbergAnalysis
                 lastOccurrencesNextPointerOffset[entry.Word] = fileStream.Position;
                 binaryWriter.Write(NullOffset);
             }
+        }
+
+        public void Dispose()
+        {
+            binaryWriter?.Dispose();
+            fileStream?.Dispose();
         }
     }
 }
