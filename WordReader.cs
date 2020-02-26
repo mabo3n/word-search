@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace gutenberg_analysis
+namespace GutenbergAnalysis
 {
     public class WordReader : IDataReader<string>
     {

@@ -1,4 +1,4 @@
-namespace gutenberg_analysis
+namespace GutenbergAnalysis
 {
     public class WordOccurrenceEntry
     {

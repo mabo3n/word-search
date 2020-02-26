@@ -2,7 +2,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 
-namespace gutenberg_analysis
+namespace GutenbergAnalysis
 {
     public class WordOccurrencesCreator : IDataWriter<WordOccurrenceEntry>
     {

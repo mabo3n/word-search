@@ -1,6 +1,6 @@
 using System;
 
-namespace gutenberg_analysis
+namespace GutenbergAnalysis
 {
     public interface IDataEntry
     {
