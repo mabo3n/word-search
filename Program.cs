@@ -2,12 +2,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using System.Diagnostics;
 using GutenbergAnalysis.Indexes;
-using GutenbergAnalysis.RW.Reading;
-using GutenbergAnalysis.Records;
 
 namespace GutenbergAnalysis
 {
@@ -133,99 +129,6 @@ namespace GutenbergAnalysis
                     } else Run();
                 }
             }
-        }
-
-        public IEnumerable<string> GetFilePaths(string root)
-        {
-            foreach (string file in Directory.EnumerateFiles(root))
-            {
-                yield return file;
-            }
-        }
-
-        public Dictionary<string, int> BuildWordFrequency(IEnumerable<WordRecord> wordRecords)
-        {
-            var frequencies = new Dictionary<string, int>();
-
-            foreach (var record in wordRecords)
-            {
-                if (frequencies.ContainsKey(record.Word))
-                {
-                    frequencies[record.Word] += 1;
-                }
-                else
-                {
-                    frequencies[record.Word] = 1;
-                }
-            }
-
-            return frequencies;
-        }
-
-        public void UpdateGlobalFrequenciesFromFileFrequencies(Dictionary<string, int> fileFrequencies)
-        {
-            lock (Frequencies)
-            {
-                foreach (var wordFrequency in fileFrequencies)
-                {
-                    var word = wordFrequency.Key;
-                    if (Frequencies.ContainsKey(word))
-                    {
-                        Frequencies[word] += wordFrequency.Value;
-                    }
-                    else
-                    {
-                        Frequencies[word] = wordFrequency.Value;
-                    }
-
-                    TotalWordCount += (ulong)wordFrequency.Value;
-                }
-            }
-        }
-
-        public void PrintFrequenciesSorted()
-        {
-            Console.WriteLine("Total word count: " + TotalWordCount);
-            Console.WriteLine("Unique word count: " + Frequencies.Count);
-            foreach (var freq in Frequencies.OrderByDescending(key => key.Value).Take(10))
-            {
-                Console.WriteLine(freq.Key + ": " + freq.Value);
-            }
-        }
-
-        private void UpdateWordFrequenciesFromFile(string filePath)
-        {
-            var words = new WordReader(filePath).Enumerate();
-            var fileWordFrequencies = BuildWordFrequency(words);
-            // Console.WriteLine("Done for " + filePath);
-            UpdateGlobalFrequenciesFromFileFrequencies(fileWordFrequencies);
-        }
-
-        public async Task WordFrequencyAsync()
-        {
-            var executionBlock = new ActionBlock<string>
-            (
-                UpdateWordFrequenciesFromFile,
-                new ExecutionDataflowBlockOptions {
-                    MaxDegreeOfParallelism = 4,
-                    BoundedCapacity = 4
-                }
-            );
-
-            var timer = Stopwatch.StartNew();
-            Console.WriteLine("Starting");
-
-            foreach (var filePath in GetFilePaths(SourcePath))
-            {
-                await executionBlock.SendAsync(filePath);
-            }
-
-            executionBlock.Complete();
-            await executionBlock.Completion;
-
-            timer.Stop();
-            Console.WriteLine("Completed in " + timer.Elapsed.ToString());
-            PrintFrequenciesSorted();
         }
     }
 }
