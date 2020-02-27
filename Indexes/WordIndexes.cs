@@ -41,13 +41,13 @@ namespace GutenbergAnalysis.Indexes
             }
         }
 
-        public void Read()
+        public IEnumerable<WordOccurrenceIndexRecord> Read()
         {
             var wordOccurrenceIndexesReader = new WordOccurrenceIndexesReader(IndexFilePath);
 
             foreach (var record in wordOccurrenceIndexesReader.Enumerate().Take(100))
             {
-                Console.WriteLine(record.Word + " " + record.Position);
+                yield return record;
             }
         }
     }

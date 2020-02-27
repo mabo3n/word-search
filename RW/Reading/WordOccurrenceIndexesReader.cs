@@ -1,6 +1,7 @@
 using System.IO;
 using System.Collections.Generic;
 using GutenbergAnalysis.Records;
+using System.Linq;
 
 namespace GutenbergAnalysis.RW.Reading
 {
@@ -15,6 +16,11 @@ namespace GutenbergAnalysis.RW.Reading
 
         public IEnumerable<WordOccurrenceIndexRecord> Enumerate()
         {
+            if (!File.Exists(path))
+            {
+                yield break;
+            }
+
             using var fileStream = File.OpenRead(path);
             using var binaryReader = new BinaryReader(fileStream);
 

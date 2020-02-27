@@ -9,15 +9,42 @@ namespace GutenbergAnalysis
 {
     class Program
     {
-        Dictionary<string, int> Frequencies = new Dictionary<string, int>();
-        ulong TotalWordCount = 0;
         public static string SourcePath = "data/";
         public static string DatabasePath = "index_db/db.txt";
         public static string DatabaseIndexPath = "index_db/db_indexes.txt";
 
+        private Dictionary<string, long> WordIndexes = new Dictionary<string, long>();
+
         static void Main(string[] args)
         {
             new Program().Run();
+        }
+
+        private void Run()
+        {
+            LoadWordIndexes();
+            Menu();
+        }
+
+        private void LoadWordIndexes()
+        {
+            Console.WriteLine("Loading Word indexes into memory...");
+            WordIndexes.Clear();
+
+            var wordIndexes = new WordIndexes(DatabasePath, DatabaseIndexPath).Read();
+
+            if (!wordIndexes.Any())
+            {
+                Console.WriteLine("Couldn't find word indexes to load.");
+                return;
+            }
+
+            foreach (var record in wordIndexes)
+            {
+                WordIndexes[record.Word] = record.Position;
+            }
+
+            Console.WriteLine("Loaded!");
         }
 
         static void TimedExecution(Action action)
@@ -50,7 +77,7 @@ namespace GutenbergAnalysis
             return input.Trim();
         }
 
-        public void Run()
+        public void Menu()
         {
             string input;
 
@@ -84,16 +111,13 @@ namespace GutenbergAnalysis
                             if (!File.Exists(DatabasePath))
                             {
                                 Console.WriteLine("\nWord Occurrences Database not found!");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Building Word Indexes...");
-                                TimedExecution(
-                                    new WordIndexes(DatabasePath, DatabaseIndexPath).Create
-                                );
+                                Menu();
                             }
 
-                            Run();
+                            Console.WriteLine("Building Word Indexes...");
+                            TimedExecution(
+                                new WordIndexes(DatabasePath, DatabaseIndexPath).Create
+                            );
                         }
                         else if (input == "2")
                         {
@@ -106,10 +130,12 @@ namespace GutenbergAnalysis
                             TimedExecution(
                                 new WordIndexes(DatabasePath, DatabaseIndexPath).Create
                             );
-
-                            Run();
                         }
-                    } else Run();
+
+                        LoadWordIndexes();
+                        Menu();
+
+                    } else Menu();
                 }
                 else if (input == "2")
                 {
@@ -122,13 +148,26 @@ namespace GutenbergAnalysis
 
                     if ((input = WordSearchMenu()) != "0")
                     {
-                        // execute search for input
                         Console.WriteLine($"Searching for \"{input}\"...");
 
-                        Run();
-                    } else Run();
+                        Search(input);
+
+                        Menu();
+                    } else Menu();
                 }
             }
+        }
+
+        private void Search(string word)
+        {
+            if (!WordIndexes.ContainsKey(word))
+            {
+                Console.WriteLine("Word not found in any file!");
+                return;
+            }
+
+            var wordPositionOnWordIndexesFile = WordIndexes[word];
+
         }
     }
 }
