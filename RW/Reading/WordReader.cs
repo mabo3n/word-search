@@ -26,6 +26,20 @@ namespace GutenbergAnalysis.RW.Reading
         
         public IEnumerable<WordRecord> Enumerate()
         {
+            // using var fileStream = File.OpenRead(path);
+            // using var streamReader = new StreamReader(fileStream);
+            //
+            // var chunkSize = 1024;
+            // var currrentBytes = new byte[chunkSize];
+            //
+            // while (fileStream.Read(currrentBytes) > 0)
+            // {
+            //     foreach (var character in currrentBytes)
+            //     {
+            //         //fileStream.Seek(, SeekOrigin.Begin);
+            //     }
+            // }
+
             foreach (string line in File.ReadLines(path))
             {
                 var words = line
@@ -37,7 +51,7 @@ namespace GutenbergAnalysis.RW.Reading
                     yield return new WordRecord()
                     {
                         Word = word,
-                        Position = 0
+                        Position = 0 // TODO
                     };
                 }
             }
