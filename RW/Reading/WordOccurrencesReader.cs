@@ -20,14 +20,14 @@ namespace GutenbergAnalysis.RW.Reading
 
             while (fileStream.Position < fileStream.Length)
             {
-                var entry = new WordOccurrenceRecord();
+                var record = new WordOccurrenceRecord();
 
-                entry.Word = binaryReader.ReadString();
-                entry.FileName = binaryReader.ReadString();
-                entry.OffsetOnFile = binaryReader.ReadInt64();
-                entry.NextOccurrenceOffset = binaryReader.ReadInt64();
+                record.Word = binaryReader.ReadString();
+                record.FileName = binaryReader.ReadString();
+                record.PositionOnFile = binaryReader.ReadInt64();
+                record.NextOccurrencePosition = binaryReader.ReadInt64();
 
-                yield return entry;
+                yield return record;
             }
         }
     }

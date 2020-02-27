@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using System.Linq;
 using GutenbergAnalysis.Records;
 using GutenbergAnalysis.RW.Reading;
+using GutenbergAnalysis.RW.Writing;
 
 namespace GutenbergAnalysis.Indexes
 {
@@ -11,28 +13,43 @@ namespace GutenbergAnalysis.Indexes
         public string DatabasePath { get; private set; }
         public string DatabaseIndexPath { get; private set; }
 
+        public WordOccurrenceDatabase(string sourceDirectoryPath, string databasePath, string databaseIndexPath = null)
+        {
+            SourceDirectoryPath = sourceDirectoryPath;
+            DatabasePath = databasePath;
+            DatabaseIndexPath = databaseIndexPath;
+        }
         public void Create()
         {
             using var wordOccurrencesWriter = new WordOccurrencesWriter(DatabasePath);
-            using var wordOccurrencesIndexWriter = new WordOccurrenceIndexesWriter(DatabasePath);
 
-            foreach (string filePath in Directory.EnumerateFiles(SourceDirectoryPath))
+            foreach (string filePath in Directory.EnumerateFiles(SourceDirectoryPath).Take(10))
             {
+                var fileName = Path.GetFileName(filePath);
                 var wordRecordReader = new WordReader(filePath);
 
                 foreach (var wordRecord in wordRecordReader.Enumerate())
                 {
                     var occurrence = new WordOccurrenceRecord();
 
-                    occurrence.FileName = filePath;
+                    occurrence.FileName = fileName;
                     occurrence.Word = wordRecord.Word;
-                    occurrence.OffsetOnFile = wordRecord.Position;
+                    occurrence.PositionOnFile = wordRecord.Position;
 
                     wordOccurrencesWriter.Write(occurrence);
                 }
             }
         }
 
-        
+        public void Read()
+        {
+            var wordOccurrencesReader = new WordOccurrencesReader(DatabasePath);
+
+            foreach (var record in wordOccurrencesReader.Enumerate().Take(100))
+            {
+                Console.WriteLine(record.Word + " " + record.FileName + " " + record.PositionOnFile + " " + record.NextOccurrencePosition);
+            }
+
+        }
     }
 }

@@ -1,11 +1,10 @@
+using System;
 using System.IO;
-using System.Collections.Generic;
-using GutenbergAnalysis.RW.Writing;
 using GutenbergAnalysis.Records;
 
-namespace GutenbergAnalysis
+namespace GutenbergAnalysis.RW.Writing
 {
-    public class WordOccurrenceIndexesWriter : IDataWriter<WordOccurrenceIndexRecord>
+    public class WordOccurrenceIndexesWriter : IDataWriter<WordOccurrenceIndexRecord>, IDisposable
     {
         private readonly string writePath;
         private readonly FileStream fileStream;

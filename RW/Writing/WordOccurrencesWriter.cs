@@ -1,10 +1,9 @@
-using System.IO;
-using System.Collections.Generic;
-using GutenbergAnalysis.Records;
-using GutenbergAnalysis.RW.Writing;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using GutenbergAnalysis.Records;
 
-namespace GutenbergAnalysis
+namespace GutenbergAnalysis.RW.Writing
 {
     public class WordOccurrencesWriter : IDataWriter<WordOccurrenceRecord>, IDisposable
     {
@@ -42,7 +41,7 @@ namespace GutenbergAnalysis
             }
             binaryWriter.Write(wordOccurrenceRecord.Word);
             binaryWriter.Write(wordOccurrenceRecord.FileName);
-            binaryWriter.Write(wordOccurrenceRecord.OffsetOnFile);
+            binaryWriter.Write(wordOccurrenceRecord.PositionOnFile);
 
             lastOccurrencesNextPointerOffset[wordOccurrenceRecord.Word] = fileStream.Position;
             binaryWriter.Write(NullOffset);

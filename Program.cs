@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Diagnostics;
+using GutenbergAnalysis.Indexes;
 using GutenbergAnalysis.RW.Reading;
 using GutenbergAnalysis.Records;
 
@@ -14,13 +15,13 @@ namespace GutenbergAnalysis
     {
         Dictionary<string, int> Frequencies = new Dictionary<string, int>();
         ulong TotalWordCount = 0;
-        string Root = "./data/";
+        public static string Root = @"C:\Users\rober\RiderProjects\word-search\data";
+        public static string DatabasePath = @"C:\Users\rober\RiderProjects\word-search\db.txt";
 
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            // new Program().WordFrequencyAsync().Wait();
-            new Program().Run();
+            new WordOccurrenceDatabase(Root, DatabasePath).Read();
         }
 
         private string ConsoleMenu(IEnumerable<string> text, Func<string, bool> validOptionFilter)
