@@ -1,5 +1,6 @@
 # Ignore downloaded data folder
 /data*/
+/index_db/*
 
 # ---------
 

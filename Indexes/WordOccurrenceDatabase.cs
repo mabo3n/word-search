@@ -11,13 +11,10 @@ namespace GutenbergAnalysis.Indexes
     {
         public string SourceDirectoryPath { get; set; }
         public string DatabasePath { get; private set; }
-        public string DatabaseIndexPath { get; private set; }
-
-        public WordOccurrenceDatabase(string sourceDirectoryPath, string databasePath, string databaseIndexPath = null)
+        public WordOccurrenceDatabase(string sourceDirectoryPath, string databasePath)
         {
             SourceDirectoryPath = sourceDirectoryPath;
             DatabasePath = databasePath;
-            DatabaseIndexPath = databaseIndexPath;
         }
         public void Create()
         {

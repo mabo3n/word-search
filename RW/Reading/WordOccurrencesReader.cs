@@ -22,6 +22,7 @@ namespace GutenbergAnalysis.RW.Reading
             {
                 var record = new WordOccurrenceRecord();
 
+                record.Position = fileStream.Position;
                 record.Word = binaryReader.ReadString();
                 record.FileName = binaryReader.ReadString();
                 record.PositionOnFile = binaryReader.ReadInt64();

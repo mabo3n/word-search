@@ -17,11 +17,16 @@ namespace GutenbergAnalysis
         ulong TotalWordCount = 0;
         public static string Root = @"C:\Users\rober\RiderProjects\word-search\data";
         public static string DatabasePath = @"C:\Users\rober\RiderProjects\word-search\db.txt";
+        public static string DatabaseIndexPath = @"C:\Users\rober\RiderProjects\word-search\db_indexes.txt";
 
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            new WordOccurrenceDatabase(Root, DatabasePath).Read();
+            //new WordOccurrenceDatabase(Root, DatabasePath).Read();
+            var wordIndexes = new WordIndexes(DatabasePath, DatabaseIndexPath);
+            wordIndexes.Create();
+            Console.WriteLine("Reading");
+            wordIndexes.Read();
         }
 
         private string ConsoleMenu(IEnumerable<string> text, Func<string, bool> validOptionFilter)
