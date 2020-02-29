@@ -31,23 +31,17 @@ namespace GutenbergAnalysis.RW.Reading
             
             foreach (var line in File.ReadLines(path))
             {
-                var lineCharacters = line.ToCharArray();
+                var lineCharacters = $"{line} ".ToCharArray();
                 
                 var wordBuilder = new StringBuilder();
 
-                for (var i = 0; i < lineCharacters.Length; i++)
+                foreach (var character in lineCharacters)
                 {
-                    var currentCharacter = lineCharacters[i];
-
-                    var isIgnoredCharacter = IgnoredCharacters.Contains(currentCharacter);
-                    var isLastCharacterOfLine = i == lineCharacters.Length - 1;
-                    
-                    if (!isIgnoredCharacter)
+                    if (!IgnoredCharacters.Contains(character))
                     {
-                        wordBuilder.Append(currentCharacter);
+                        wordBuilder.Append(character);
                     }
-                    
-                    if (isIgnoredCharacter || isLastCharacterOfLine)
+                    else
                     {
                         var isEndOfWord = wordBuilder.Length > 0;
 
@@ -66,7 +60,7 @@ namespace GutenbergAnalysis.RW.Reading
                     }
                 }
 
-                byteOffset += 2;
+                byteOffset++;
             }
         }
     }
