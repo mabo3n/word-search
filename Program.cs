@@ -194,7 +194,7 @@ namespace GutenbergAnalysis
                 fileStreamReader.BaseStream.Seek(a, SeekOrigin.Begin);
                 fileStreamReader.ReadBlock(block);
                 
-                Console.Write($"Found at {wordOccurrenceRecord.FileName} ({wordOccurrenceRecord.Position}): ");
+                Console.Write($"Found at {wordOccurrenceRecord.FileName} ({wordOccurrenceRecord.PositionOnFile}): ");
                 
                 Console.WriteLine("..." + new string(block).Replace(Environment.NewLine, " ") + "...");
                 

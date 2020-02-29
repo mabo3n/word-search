@@ -21,7 +21,7 @@ namespace GutenbergAnalysis.Indexes
         {
             using var wordOccurrencesWriter = new WordOccurrencesWriter(DatabasePath);
 
-            foreach (string filePath in Directory.EnumerateFiles(SourceDirectoryPath).Take(10))
+            foreach (string filePath in Directory.EnumerateFiles(SourceDirectoryPath))
             {
                 var fileName = Path.GetFileName(filePath);
                 var wordRecordReader = new WordReader(filePath);
@@ -36,6 +36,7 @@ namespace GutenbergAnalysis.Indexes
 
                     wordOccurrencesWriter.Write(occurrence);
                 }
+                Console.WriteLine(filePath + " indexed.");
             }
         }
 
