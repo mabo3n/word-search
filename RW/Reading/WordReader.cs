@@ -35,13 +35,19 @@ namespace GutenbergAnalysis.RW.Reading
                 
                 var wordBuilder = new StringBuilder();
 
-                foreach (var character in lineCharacters)
+                for (var i = 0; i < lineCharacters.Length; i++)
                 {
-                    if (!IgnoredCharacters.Contains(character))
+                    var currentCharacter = lineCharacters[i];
+
+                    var isIgnoredCharacter = IgnoredCharacters.Contains(currentCharacter);
+                    var isLastCharacterOfLine = i == lineCharacters.Length - 1;
+                    
+                    if (!isIgnoredCharacter)
                     {
-                        wordBuilder.Append(character);
+                        wordBuilder.Append(currentCharacter);
                     }
-                    else
+                    
+                    if (isIgnoredCharacter || isLastCharacterOfLine)
                     {
                         var isEndOfWord = wordBuilder.Length > 0;
 
