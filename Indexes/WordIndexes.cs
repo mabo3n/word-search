@@ -24,7 +24,7 @@ namespace GutenbergAnalysis.Indexes
 
             var wordsFirstOccurrencePosition = new Dictionary<string, long>();
             
-            foreach (var occurrence in wordOccurrencesReader.Enumerate().Take(100))
+            foreach (var occurrence in wordOccurrencesReader.Enumerate())
             {
                 if (!wordsFirstOccurrencePosition.ContainsKey(occurrence.Word))
                     wordsFirstOccurrencePosition[occurrence.Word] = occurrence.Position;
@@ -45,7 +45,7 @@ namespace GutenbergAnalysis.Indexes
         {
             var wordOccurrenceIndexesReader = new WordOccurrenceIndexesReader(IndexFilePath);
 
-            foreach (var record in wordOccurrenceIndexesReader.Enumerate().Take(100))
+            foreach (var record in wordOccurrenceIndexesReader.Enumerate())
             {
                 yield return record;
             }

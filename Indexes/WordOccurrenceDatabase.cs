@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GutenbergAnalysis.Records;
@@ -38,15 +39,9 @@ namespace GutenbergAnalysis.Indexes
             }
         }
 
-        public void Read()
+        public IEnumerable<WordOccurrenceRecord> Search(WordOccurrenceIndexRecord record)
         {
-            var wordOccurrencesReader = new WordOccurrencesReader(DatabasePath);
-
-            foreach (var record in wordOccurrencesReader.Enumerate().Take(100))
-            {
-                Console.WriteLine(record.Word + " " + record.FileName + " " + record.PositionOnFile + " " + record.NextOccurrencePosition);
-            }
-
+            return new WordOccurrencesReader(DatabasePath).Enumerate(record);
         }
     }
 }

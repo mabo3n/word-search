@@ -4,23 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using GutenbergAnalysis.Indexes;
+using GutenbergAnalysis.Records;
 using GutenbergAnalysis.RW.Reading;
 
 namespace GutenbergAnalysis
 {
     class Program
     {
-        public static string folderPath = "C:/Users/rober/RiderProjects/word-search/"; 
-        public static string SourcePath = folderPath + "data/";
-        public static string DatabasePath = folderPath + "index_db/db.txt";
-        public static string DatabaseIndexPath = folderPath + "index_db/db_indexes.txt";
+        public static string ProjectRootPath = "C:/Users/rober/RiderProjects/word-search/"; 
+        public static string SourcePath = ProjectRootPath + "data/";
+        public static string DatabasePath = ProjectRootPath + "index_db/db.txt";
+        public static string DatabaseIndexPath = ProjectRootPath + "index_db/db_indexes.txt";
 
         private Dictionary<string, long> WordIndexes = new Dictionary<string, long>();
 
         static void Main(string[] args)
         {
-            var a = new WordReader(folderPath + "teste.txt").Enumerate();
-            Console.WriteLine(string.Join('\n', a.Select(r => r.Word + "/" + r.Position)));
             new Program().Run();
         }
 
@@ -154,7 +153,9 @@ namespace GutenbergAnalysis
                     {
                         Console.WriteLine($"Searching for \"{input}\"...");
 
-                        Search(input);
+                        TimedExecution(
+                            () => Search(input)
+                        );
 
                         Menu();
                     } else Menu();
@@ -170,7 +171,34 @@ namespace GutenbergAnalysis
                 return;
             }
             
-            var wordPositionOnWordIndexesFile = WordIndexes[word];
+            var database = new WordOccurrenceDatabase(SourcePath, DatabasePath);
+
+            var wordOccurrenceIndexRecord = new WordOccurrenceIndexRecord()
+            {
+                Word = word,
+                Position = WordIndexes[word]
+            };
+            
+            foreach (var wordOccurrenceRecord in database.Search(wordOccurrenceIndexRecord))
+            {
+                var occurrenceFilePath = SourcePath + wordOccurrenceRecord.FileName;
+                using var fileStreamReader = new StreamReader(occurrenceFilePath);
+
+                var n = 30;
+                var a = wordOccurrenceRecord.PositionOnFile - n - wordOccurrenceRecord.Word.Length/2;
+                var b = wordOccurrenceRecord.PositionOnFile + n + wordOccurrenceRecord.Word.Length/2;
+
+                var blockSize = b - a;
+                var block = new char[blockSize];
+                
+                fileStreamReader.BaseStream.Seek(a, SeekOrigin.Begin);
+                fileStreamReader.ReadBlock(block);
+                
+                Console.Write($"Found at {wordOccurrenceRecord.FileName} ({wordOccurrenceRecord.Position}): ");
+                
+                Console.WriteLine("..." + new string(block).Replace(Environment.NewLine, " ") + "...");
+                
+            }
 
         }
     }

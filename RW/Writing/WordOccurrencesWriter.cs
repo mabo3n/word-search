@@ -7,7 +7,7 @@ namespace GutenbergAnalysis.RW.Writing
 {
     public class WordOccurrencesWriter : IDataWriter<WordOccurrenceRecord>, IDisposable
     {
-        private const long NullOffset = 0;
+        public const long NullOffset = 0;
         private readonly Dictionary<string, long> lastOccurrencesNextPointerOffset;
 
         private readonly string writePath;

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Collections.Generic;
 using GutenbergAnalysis.Records;
+using GutenbergAnalysis.RW.Writing;
 
 namespace GutenbergAnalysis.RW.Reading
 {
@@ -30,6 +31,32 @@ namespace GutenbergAnalysis.RW.Reading
 
                 yield return record;
             }
+        }
+        
+        public IEnumerable<WordOccurrenceRecord> Enumerate(WordOccurrenceIndexRecord wordOccurrenceIndexRecord)
+        {
+            using var fileStream = File.OpenRead(path);
+            using var binaryReader = new BinaryReader(fileStream);
+            
+            var nextOccurrencePosition = wordOccurrenceIndexRecord.Position;
+            
+            do
+            {
+                fileStream.Seek(nextOccurrencePosition, SeekOrigin.Begin);
+                
+                var currentWordOccurrenceRecord = new WordOccurrenceRecord();
+
+                currentWordOccurrenceRecord.Position = fileStream.Position;
+                currentWordOccurrenceRecord.Word = binaryReader.ReadString();
+                currentWordOccurrenceRecord.FileName = binaryReader.ReadString();
+                currentWordOccurrenceRecord.PositionOnFile = binaryReader.ReadInt64();
+                currentWordOccurrenceRecord.NextOccurrencePosition = binaryReader.ReadInt64();
+
+                yield return currentWordOccurrenceRecord;
+
+                nextOccurrencePosition = currentWordOccurrenceRecord.NextOccurrencePosition;
+                
+            } while (nextOccurrencePosition != WordOccurrencesWriter.NullOffset);
         }
     }
 }
