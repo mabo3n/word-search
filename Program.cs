@@ -4,19 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using GutenbergAnalysis.Indexes;
+using GutenbergAnalysis.RW.Reading;
 
 namespace GutenbergAnalysis
 {
     class Program
     {
-        public static string SourcePath = "data/";
-        public static string DatabasePath = "index_db/db.txt";
-        public static string DatabaseIndexPath = "index_db/db_indexes.txt";
+        public static string folderPath = "C:/Users/rober/RiderProjects/word-search/"; 
+        public static string SourcePath = folderPath + "data/";
+        public static string DatabasePath = folderPath + "index_db/db.txt";
+        public static string DatabaseIndexPath = folderPath + "index_db/db_indexes.txt";
 
         private Dictionary<string, long> WordIndexes = new Dictionary<string, long>();
 
         static void Main(string[] args)
         {
+            var a = new WordReader(folderPath + "teste.txt").Enumerate();
+            Console.WriteLine(string.Join('\n', a.Select(r => r.Word + "/" + r.Position)));
             new Program().Run();
         }
 
@@ -98,7 +102,7 @@ namespace GutenbergAnalysis
                         new[] {
                             "Which index do you want to [re]build?",
                             "(1) Word Indexes (higher layer)",
-                            "(2) Word Indexes (higher layer) and Word Ocurrences Database (lower layer)",
+                            "(2) Word Indexes (higher layer) and Word Occurrences Database (lower layer)",
                             "(0) Exit",
                         },
                         input => new[] {"0", "1", "2"}.Contains(input)
@@ -165,7 +169,7 @@ namespace GutenbergAnalysis
                 Console.WriteLine("Word not found in any file!");
                 return;
             }
-
+            
             var wordPositionOnWordIndexesFile = WordIndexes[word];
 
         }

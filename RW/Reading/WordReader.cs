@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using GutenbergAnalysis.Records;
 
 namespace GutenbergAnalysis.RW.Reading
@@ -26,34 +27,40 @@ namespace GutenbergAnalysis.RW.Reading
         
         public IEnumerable<WordRecord> Enumerate()
         {
-            // using var fileStream = File.OpenRead(path);
-            // using var streamReader = new StreamReader(fileStream);
-            //
-            // var chunkSize = 1024;
-            // var currrentBytes = new byte[chunkSize];
-            //
-            // while (fileStream.Read(currrentBytes) > 0)
-            // {
-            //     foreach (var character in currrentBytes)
-            //     {
-            //         //fileStream.Seek(, SeekOrigin.Begin);
-            //     }
-            // }
-
-            foreach (string line in File.ReadLines(path))
+            long byteOffset = 0;
+            
+            foreach (var line in File.ReadLines(path))
             {
-                var words = line
-                    .Split(IgnoredCharacters, StringSplitOptions.RemoveEmptyEntries)
-                    .Where(IsNotStopWord);
+                var lineCharacters = line.ToCharArray();
+                
+                var wordBuilder = new StringBuilder();
 
-                foreach (var word in words)
+                foreach (var character in lineCharacters)
                 {
-                    yield return new WordRecord()
+                    if (!IgnoredCharacters.Contains(character))
                     {
-                        Word = word,
-                        Position = 0 // TODO
-                    };
+                        wordBuilder.Append(character);
+                    }
+                    else
+                    {
+                        var isEndOfWord = wordBuilder.Length > 0;
+
+                        if (isEndOfWord)
+                        {
+                            yield return new WordRecord()
+                            {
+                                Word = wordBuilder.ToString(),
+                                Position = byteOffset
+                            };
+                            byteOffset += wordBuilder.Length;
+                            wordBuilder.Clear();
+                        }
+
+                        byteOffset++;
+                    }
                 }
+
+                byteOffset += 2;
             }
         }
     }
