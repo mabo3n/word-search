@@ -21,7 +21,7 @@ namespace GutenbergAnalysis.Indexes
         {
             using var wordOccurrencesWriter = new WordOccurrencesWriter(DatabasePath);
 
-            foreach (string filePath in Directory.EnumerateFiles(SourceDirectoryPath))
+            foreach (string filePath in Directory.EnumerateFiles(SourceDirectoryPath).Take(4000))
             {
                 var fileName = Path.GetFileName(filePath);
                 var wordRecordReader = new WordReader(filePath);
