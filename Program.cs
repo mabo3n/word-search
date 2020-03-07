@@ -11,7 +11,7 @@ namespace GutenbergAnalysis
 {
     class Program
     {
-        public static string ProjectRootPath = "C:/Users/rober/RiderProjects/word-search/"; 
+        public static string ProjectRootPath = "./"; 
         public static string SourcePath = ProjectRootPath + "data/";
         public static string DatabasePath = ProjectRootPath + "index_db/db.txt";
         public static string DatabaseIndexPath = ProjectRootPath + "index_db/db_indexes.txt";
