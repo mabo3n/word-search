@@ -20,11 +20,11 @@ namespace GutenbergAnalysis.Indexes
         }
         public void Create()
         {
-            var wordOccurrencesReader = new WordOccurrencesReader(SourceFilePath);
+            var wordOccurrencesReaderMapReduce = new WordOccurrencesReaderMapReduce(SourceFilePath);
 
             var wordsFirstOccurrencePosition = new Dictionary<string, long>();
             
-            foreach (var occurrence in wordOccurrencesReader.Enumerate())
+            foreach (var occurrence in wordOccurrencesReaderMapReduce.Enumerate())
             {
                 if (!wordsFirstOccurrencePosition.ContainsKey(occurrence.Word))
                     wordsFirstOccurrencePosition[occurrence.Word] = occurrence.Position;

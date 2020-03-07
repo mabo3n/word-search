@@ -13,8 +13,8 @@ namespace GutenbergAnalysis
     {
         public static string ProjectRootPath = "./"; 
         public static string SourcePath = ProjectRootPath + "data/";
-        public static string DatabasePath = ProjectRootPath + "index_db/db.txt";
-        public static string DatabaseIndexPath = ProjectRootPath + "index_db/db_indexes.txt";
+        public static string DatabasePath = ProjectRootPath + "index_db/mapreduced_db.txt";
+        public static string DatabaseIndexPath = ProjectRootPath + "index_db/mapreduced_db_indexes.txt";
 
         private Dictionary<string, long> WordIndexes = new Dictionary<string, long>();
 
@@ -124,15 +124,17 @@ namespace GutenbergAnalysis
                         }
                         else if (input == "2")
                         {
-                            Console.WriteLine("Building Word Occurrence Database...");
-                            TimedExecution(
-                                new WordOccurrenceDatabase(SourcePath, DatabasePath).Create
-                            );
+                            // Console.WriteLine("Building Word Occurrence Database...");
+                            // TimedExecution(
+                            //     new WordOccurrenceDatabase(SourcePath, DatabasePath).Create
+                            // );
 
-                            Console.WriteLine("Building Word Indexes...");
-                            TimedExecution(
-                                new WordIndexes(DatabasePath, DatabaseIndexPath).Create
-                            );
+                            // Console.WriteLine("Building Word Indexes...");
+                            // TimedExecution(
+                            //     new WordIndexes(DatabasePath, DatabaseIndexPath).Create
+                            // );
+                            Console.WriteLine(
+                                "Option unavailable as Word Occurrences Database was built with MapReduce");
                         }
 
                         LoadWordIndexes();
@@ -170,36 +172,28 @@ namespace GutenbergAnalysis
                 Console.WriteLine("Word not found in any file!");
                 return;
             }
-            
-            var database = new WordOccurrenceDatabase(SourcePath, DatabasePath);
+
+            var database = new WordOccurrenceDatabaseMapReduce(SourcePath, DatabasePath);
 
             var wordOccurrenceIndexRecord = new WordOccurrenceIndexRecord()
             {
                 Word = word,
                 Position = WordIndexes[word]
             };
-            
-            foreach (var wordOccurrenceRecord in database.Search(wordOccurrenceIndexRecord))
+
+            foreach (var wordOccurrenceMapReduceRecord in database.Search(wordOccurrenceIndexRecord))
             {
-                var occurrenceFilePath = SourcePath + wordOccurrenceRecord.FileName;
+                var occurrenceFilePath = SourcePath + wordOccurrenceMapReduceRecord.FileName;
                 using var fileStreamReader = new StreamReader(occurrenceFilePath);
 
-                var n = 30;
-                var a = wordOccurrenceRecord.PositionOnFile - n - wordOccurrenceRecord.Word.Length/2;
-                var b = wordOccurrenceRecord.PositionOnFile + n + wordOccurrenceRecord.Word.Length/2;
+                fileStreamReader.BaseStream.Seek(wordOccurrenceMapReduceRecord.LinePositionOnFile, SeekOrigin.Begin);
+                var line = fileStreamReader.ReadLine();
 
-                var blockSize = b - a;
-                var block = new char[blockSize];
-                
-                fileStreamReader.BaseStream.Seek(a, SeekOrigin.Begin);
-                fileStreamReader.ReadBlock(block);
-                
-                Console.Write($"Found at {wordOccurrenceRecord.FileName} ({wordOccurrenceRecord.PositionOnFile}): ");
-                
-                Console.WriteLine("..." + new string(block).Replace(Environment.NewLine, " ") + "...");
-                
+                Console.Write($"* Found at {wordOccurrenceMapReduceRecord.FileName} ({wordOccurrenceMapReduceRecord.LinePositionOnFile}): ");
+
+                Console.WriteLine("..." + line.Substring(0, Math.Min(line.Length-1, 100)));
             }
-
+            Console.WriteLine();
         }
     }
 }
